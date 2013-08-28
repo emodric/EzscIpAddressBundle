@@ -1,0 +1,59 @@
+{% extends noLayout ? viewbaseLayout : "eZDemoBundle::pagelayout.html.twig" %}
+
+{% block content %}
+<section class="content-view-full">
+    <article class="class-article row">
+        <div class="span8">
+            <div class="attribute-header">
+                <h1>{{ ez_render_field( content, "title" ) }}</h1>
+            </div>
+
+            <div class="attribute-byline">
+                <span class="date">
+                    {{ content.contentInfo.publishedDate }}
+                </span>
+
+                <span class="author">
+                    {{ ez_render_field( content, "author" ) }}
+                </span>
+            </div>
+
+            <div class="attribute-image full-head">
+                {{ ez_render_field( content, "image", { parameters: { alias: "articleimage" } } ) }}
+
+                    <div class="attribute-caption">
+                        {{ ez_render_field( content, "caption" ) }}
+                    </div>
+            </div>
+
+            <div class="attribute-long">
+                {{ ez_render_field( content, "body" ) }}
+            </div>
+
+            <div class="attribute-tags">
+                {{ ez_render_field( content, "tags" ) }}
+            </div>
+        </div>
+
+        <div class="span4">
+            <aside>
+                <section class="content-view-aside">
+                    <h2>Location</h2>
+                    <article>
+                        <div class="attribute-location">
+                            {{ ez_render_field( content, "location", { parameters: { width: false, height: false, showMap: false } } ) }}
+                        </div>
+                    </article>
+
+                    <h2>IP address</h2>
+                    <article>
+                        <div class="attribute-header">
+                            {{ ez_render_field( content, "ip" ) }} (from Twig)
+                        </div>
+                    </article>
+                </section>
+            </aside>
+        </div>
+    </article>
+</section>
+{% endblock %}

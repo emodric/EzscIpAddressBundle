@@ -1,0 +1,4 @@
+parameters:
+   ezsettings.eng.field_templates:
+       - {template: EzPublishCoreBundle::content_fields.html.twig, priority: 0}
+       - {template: NetgenEzscIpAddressBundle::ezscip_content_field.html.twig, priority: 10}

@@ -1,0 +1,9 @@
+ezpublish:
+    system:
+        eng:
+            location_view:
+                full:
+                    article:
+                        template: NetgenEzscIpAddressBundle:full:article.html.twig
+                        match:
+                            Identifier\ContentType: article
