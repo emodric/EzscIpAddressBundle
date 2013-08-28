@@ -1,0 +1,10 @@
+parameters:
+    ezpublish.fieldType.ezscip.class: Netgen\EzscIpAddressBundle\Core\FieldType\IpAddress\Type
+
+services:
+
+    ezpublish.fieldType.ezscip:
+        class: %ezpublish.fieldType.ezscip.class%
+        parent: ezpublish.fieldType
+        tags:
+            - {name: ezpublish.fieldType, alias: ezscip}

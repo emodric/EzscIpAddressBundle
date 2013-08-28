@@ -1,7 +1,0 @@
-parameters:
-#    netgen_ezsc_ip_address.example.class: Netgen\EzscIpAddressBundle\Example
-
-services:
-#    netgen_ezsc_ip_address.example:
-#        class: %netgen_ezsc_ip_address.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
