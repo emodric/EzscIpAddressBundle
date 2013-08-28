@@ -6,9 +6,93 @@ use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\Core\FieldType\Value as BaseValue;
 use eZ\Publish\SPI\FieldType\Value as SPIValue;
+use eZ\Publish\API\Repository\Values\ContentType\FieldDefinition;
+use eZ\Publish\Core\FieldType\ValidationError;
+use Netgen\EzscIpAddressBundle\Core\FieldType\Validator\IpAddressValidator;
 
 class Type extends FieldType
 {
+    protected $validatorConfigurationSchema = array(
+        'IpAddressValidator' => array()
+    );
+
+    /**
+     * Validates the validatorConfiguration of a FieldDefinitionCreateStruct or FieldDefinitionUpdateStruct
+     *
+     * This method expects that given $validatorConfiguration is complete, for this purpose method
+     * {@link self::applyDefaultValidatorConfiguration()} is provided.
+     *
+     * This is a base implementation, returning a validation error for each
+     * specified validator, since by default no validators are supported.
+     * Overwrite in derived types, if validation is supported.
+     *
+     * @param mixed $validatorConfiguration
+     *
+     * @return \eZ\Publish\SPI\FieldType\ValidationError[]
+     */
+    public function validateValidatorConfiguration( $validatorConfiguration )
+    {
+        $validationErrors = array();
+        $validator = new IpAddressValidator();
+
+        foreach ( $validatorConfiguration as $validatorIdentifier => $constraints )
+        {
+            if ( $validatorIdentifier !== 'IpAddressValidator' )
+            {
+                $validationErrors[] = new ValidationError(
+                    "Validator '%validator%' is unknown",
+                    null,
+                    array(
+                        "validator" => $validatorIdentifier
+                    )
+                );
+
+                continue;
+            }
+
+            $validationErrors += $validator->validateConstraints( $constraints );
+        }
+
+        return $validationErrors;
+    }
+
+    /**
+     * Validates a field based on the validators in the field definition
+     *
+     * This is a base implementation, returning an empty array() that indicates
+     * that no validation errors occurred. Overwrite in derived types, if
+     * validation is supported.
+     *
+     * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
+     *
+     * @param \eZ\Publish\API\Repository\Values\ContentType\FieldDefinition $fieldDefinition The field definition of the field
+     * @param \eZ\Publish\SPI\FieldType\Value $fieldValue The field value for which an action is performed
+     *
+     * @return \eZ\Publish\SPI\FieldType\ValidationError[]
+     */
+    public function validate( FieldDefinition $fieldDefinition, SPIValue $fieldValue )
+    {
+        $errors = array();
+
+        if ( $this->isEmptyValue( $fieldValue ) )
+        {
+            return $errors;
+        }
+
+        $validatorConfiguration = $fieldDefinition->getValidatorConfiguration();
+        $constraints = isset( $validatorConfiguration['IpAddressValidator'] ) ?
+            $validatorConfiguration['IpAddressValidator'] :
+            array();
+
+        $validator = new IpAddressValidator();
+        $validator->initializeWithConstraints( $constraints );
+
+        if ( !$validator->validate( $fieldValue ) )
+            return $validator->getMessage();
+
+        return array();
+    }
+
     /**
      * Returns the field type identifier for this field type
      *
