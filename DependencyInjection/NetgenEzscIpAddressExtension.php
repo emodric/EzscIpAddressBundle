@@ -24,5 +24,6 @@ class NetgenEzscIpAddressExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('fieldtypes.yml');
+        $loader->load('storage_engines.yml');
     }
 }

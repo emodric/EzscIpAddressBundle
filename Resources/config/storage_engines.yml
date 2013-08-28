@@ -1,0 +1,9 @@
+parameters:
+    ezpublish.fieldType.ezscip.converter.class: Netgen\EzscIpAddressBundle\Core\Persistence\Legacy\Content\FieldValue\Converter\IpAddress
+
+services:
+
+    ezpublish.fieldType.ezscip.converter:
+        class: %ezpublish.fieldType.ezscip.converter.class%
+        tags:
+            - {name: ezpublish.storageEngine.legacy.converter, alias: ezscip, lazy: true, callback: "::create"}
